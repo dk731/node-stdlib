@@ -80,14 +80,19 @@ function ensureBuffer(input) {
 	if (Buffer.isBuffer(input)) {
 		return input;
 	}
+	if (ArrayBuffer.isView(input)) {
+		return Buffer.from(input.buffer, input.byteOffset, input.byteLength);
+	}
 
 	if (typeof input === 'number') {
 		return Buffer.alloc(input);
-	} else if (typeof input === 'string') {
+	} 
+	if (typeof input === 'string') {
 		return Buffer.from(input, 'utf8');
-	} else {
-		throw new Error(`input must be buffer, number, or string; received ${typeof input}`);
-	}
+	} 
+	
+	throw new Error(`input must be buffer, number, or string; received ${typeof input}`);
+	
 }
 
 function _crc32(buf: Buffer|string, previous?: Buffer|number) {
